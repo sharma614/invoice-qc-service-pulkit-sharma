@@ -4,7 +4,7 @@ A production-ready Python service for extracting, validating, and quality-checki
 
 ## Overview
 
-### What You Built
+### What I Built
 
 A complete invoice quality-control system with three main interfaces:
 
