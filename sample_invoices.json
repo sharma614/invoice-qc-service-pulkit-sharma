@@ -1,0 +1,203 @@
+[
+  {
+    "invoice_number": "INV001",
+    "invoice_date": "2025-01-01",
+    "seller_name": "CompanyA",
+    "buyer_name": "CompanyB",
+    "currency": "EUR",
+    "net_total": 80,
+    "tax_amount": 20,
+    "gross_total": 100,
+    "due_date": "2025-02-01",
+    "line_items": []
+  },
+  {
+    "invoice_number": "INV002",
+    "invoice_date": "2025-01-05",
+    "seller_name": "Tech Solutions Ltd",
+    "buyer_name": "Global Enterprises",
+    "currency": "USD",
+    "net_total": 1500,
+    "tax_amount": 300,
+    "gross_total": 1800,
+    "due_date": "2025-02-05",
+    "line_items": [
+      {
+        "description": "Consulting Services",
+        "line_total": 1000
+      },
+      {
+        "description": "Software License",
+        "line_total": 500
+      }
+    ]
+  },
+  {
+    "invoice_number": "INV003",
+    "invoice_date": "2025-01-10",
+    "seller_name": "Office Supplies Inc",
+    "buyer_name": "Manufacturing Corp",
+    "currency": "GBP",
+    "net_total": 250,
+    "tax_amount": 50,
+    "gross_total": 300,
+    "due_date": "2025-02-10",
+    "line_items": [
+      {
+        "description": "Printer Paper (10 reams)",
+        "line_total": 150
+      },
+      {
+        "description": "Ink Cartridges",
+        "line_total": 100
+      }
+    ]
+  },
+  {
+    "invoice_number": "INV004",
+    "invoice_date": "2025-01-15",
+    "seller_name": "Services Inc",
+    "buyer_name": "Client XYZ",
+    "currency": "EUR",
+    "net_total": 500,
+    "tax_amount": 100,
+    "gross_total": 600,
+    "due_date": "2025-02-15",
+    "line_items": [
+      {
+        "description": "Monthly Retainer",
+        "line_total": 500
+      }
+    ]
+  },
+  {
+    "invoice_number": "INV005",
+    "invoice_date": "2025-01-20",
+    "seller_name": "Hardware Distributors",
+    "buyer_name": "IT Department",
+    "currency": "USD",
+    "net_total": 3000,
+    "tax_amount": 600,
+    "gross_total": 3600,
+    "due_date": "2025-03-20",
+    "line_items": [
+      {
+        "description": "Server Components",
+        "line_total": 2000
+      },
+      {
+        "description": "Network Equipment",
+        "line_total": 1000
+      }
+    ]
+  },
+  {
+    "invoice_number": "INV006",
+    "invoice_date": "2025-01-25",
+    "seller_name": "Marketing Agency Pro",
+    "buyer_name": "Brand Marketing Ltd",
+    "currency": "EUR",
+    "net_total": 2500,
+    "tax_amount": 500,
+    "gross_total": 3000,
+    "due_date": "2025-02-25",
+    "line_items": [
+      {
+        "description": "Social Media Campaign",
+        "line_total": 1500
+      },
+      {
+        "description": "Content Creation",
+        "line_total": 1000
+      }
+    ]
+  },
+  {
+    "invoice_number": "INV001",
+    "invoice_date": "2025-01-01",
+    "seller_name": "CompanyA",
+    "buyer_name": "CompanyB",
+    "currency": "EUR",
+    "net_total": 80,
+    "tax_amount": 20,
+    "gross_total": 100,
+    "due_date": "2025-02-01",
+    "line_items": []
+  },
+  {
+    "invoice_number": "INV007",
+    "invoice_date": "2025-01-30",
+    "seller_name": "Consulting Group",
+    "buyer_name": "Development Team",
+    "currency": "INR",
+    "net_total": 50000,
+    "tax_amount": 5000,
+    "gross_total": 55000,
+    "due_date": "2025-02-28",
+    "line_items": [
+      {
+        "description": "Development Hours",
+        "line_total": 30000
+      },
+      {
+        "description": "Infrastructure Setup",
+        "line_total": 20000
+      }
+    ]
+  },
+  {
+    "invoice_number": "INV008",
+    "invoice_date": "2025-02-01",
+    "seller_name": "Logistics Partners",
+    "buyer_name": "Distribution Center",
+    "currency": "USD",
+    "net_total": 4000,
+    "tax_amount": 800,
+    "gross_total": 4800,
+    "due_date": "2025-03-01",
+    "line_items": [
+      {
+        "description": "Shipping Services",
+        "line_total": 2500
+      },
+      {
+        "description": "Storage Fees",
+        "line_total": 1500
+      }
+    ]
+  },
+  {
+    "invoice_number": "INV009",
+    "invoice_date": "2025-02-05",
+    "seller_name": "Training Institute",
+    "buyer_name": "HR Department",
+    "currency": "EUR",
+    "net_total": 1200,
+    "tax_amount": 240,
+    "gross_total": 1440,
+    "due_date": "2025-03-05",
+    "line_items": [
+      {
+        "description": "Employee Training Program (10 participants)",
+        "line_total": 1200
+      }
+    ]
+  },
+  {
+    "invoice_number": "INV010",
+    "invoice_date": "2025-02-10",
+    "seller_name": "Legal Services LLC",
+    "buyer_name": "Compliance Officer",
+    "currency": "USD",
+    "net_total": 2000,
+    "tax_amount": 400,
+    "gross_total": 2400,
+    "due_date": "2025-03-10",
+    "line_items": [
+      {
+        "description": "Legal Consultation Hours",
+        "line_total": 2000
+      }
+    ]
+  }
+]

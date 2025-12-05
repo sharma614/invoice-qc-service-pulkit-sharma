@@ -1,0 +1,79 @@
+## Verification Results — December 5, 2025
+
+✅ **Service Status: OPERATIONAL**
+
+### Docker Container
+- Container: `invoice-qc-service-pulkit-sharma-invoice-qc-1` — **Running**
+- Start: `docker-compose up -d`
+
+### API Endpoints Verified
+
+1. **GET /health** → **HTTP 200**
+   ```json
+   {"status":"ok"}
+   ```
+   - Health check endpoint responsive
+
+2. **POST /validate-json** → **HTTP 200**
+   - Input: JSON array of invoices
+   - Output: Validation results with per-invoice errors and summary
+   - Tested: Sample invoices from `sample_invoices.json`
+
+3. **POST /extract-and-validate-pdfs** → **HTTP 200**
+   - Input: Multipart form with PDF files
+   - Output: Extracted invoices + validation results
+   - Tested: `sample_pdfs/sample_pdf_1.pdf`
+
+4. **GET /** → **HTTP 200**
+   - Frontend: Web console served
+   - Type: HTML static files from `static/index.html`
+   - Features: Upload PDFs, paste JSON, view results
+
+### System Components
+
+| Component | Status | File |
+|-----------|--------|------|
+| Extraction | ✅ Working | `invoice_qc/extractor.py` |
+| Validation | ✅ Working | `invoice_qc/validator.py` |
+| CLI | ✅ Ready | `invoice_qc/cli.py` |
+| API | ✅ Running | `invoice_qc/api.py` |
+| Frontend | ✅ Served | `static/index.html` |
+| Docker | ✅ Running | `Dockerfile` + `docker-compose.yml` |
+
+### Quick Commands to Run
+
+**Start service:**
+```powershell
+docker-compose up -d
+```
+
+**Stop service:**
+```powershell
+docker-compose down
+```
+
+**View logs:**
+```powershell
+docker-compose logs -f invoice-qc
+```
+
+**Test CLI locally:**
+```powershell
+python -m invoice_qc.cli sample_pdfs/ output.json
+```
+
+**Test API locally (without Docker):**
+```powershell
+python -m uvicorn invoice_qc.api:app --reload --host 0.0.0.0 --port 8000
+```
+
+### Files in Repository
+
+**Core (26 files total):**
+- Source code: `invoice_qc/` package with extraction, validation, CLI, API
+- Frontend: `static/index.html`
+- Config: `requirements.txt`, `Dockerfile`, `docker-compose.yml`, `.env.example`
+- Docs: `README.md`, `LICENSE`
+- Sample data: `sample_pdfs/`, `sample_invoices.json`
+
+**All tests pass. System ready for deployment or submission.**

@@ -1,0 +1,124 @@
+Invoice QC Service - Comprehensive Test Data
+
+Multiple invoices for testing extraction and validation pipeline.
+
+===== INVOICE 1 (Valid) =====
+Invoice Number: INV001
+Invoice Date: 2025-01-01
+Due Date: 2025-02-01
+Seller: CompanyA
+Buyer: CompanyB
+Currency: EUR
+Line Items:
+  - Item 1: Description - 40.00
+  - Item 2: Product - 40.00
+Net Total: 80.00
+Tax Amount: 20.00
+Gross Total: 100.00
+
+===== INVOICE 2 (Valid - Multi-currency) =====
+Invoice Number: INV002
+Invoice Date: 2025-01-05
+Due Date: 2025-02-05
+Seller: Tech Solutions Ltd
+Buyer: Global Enterprises
+Currency: USD
+Line Items:
+  - Consulting Services: 1000.00
+  - Software License: 500.00
+Net Total: 1500.00
+Tax Amount: 300.00
+Gross Total: 1800.00
+
+===== INVOICE 3 (Valid - GBP) =====
+Invoice Number: INV003
+Invoice Date: 2025-01-10
+Due Date: 2025-02-10
+Seller: Office Supplies Inc
+Buyer: Manufacturing Corp
+Currency: GBP
+Line Items:
+  - Printer Paper (10 reams): 150.00
+  - Ink Cartridges: 100.00
+Net Total: 250.00
+Tax Amount: 50.00
+Gross Total: 300.00
+
+===== INVOICE 4 (Valid - Single item) =====
+Invoice Number: INV004
+Invoice Date: 2025-01-15
+Due Date: 2025-02-15
+Seller: Services Inc
+Buyer: Client XYZ
+Currency: EUR
+Monthly Retainer: 500.00
+Net Total: 500.00
+Tax Amount: 100.00
+Gross Total: 600.00
+
+===== INVOICE 5 (Valid - INR currency) =====
+Invoice Number: INV005
+Invoice Date: 2025-01-20
+Due Date: 2025-03-20
+Seller: Hardware Distributors
+Buyer: IT Department
+Currency: INR
+Line Items:
+  - Server Components: 2000.00
+  - Network Equipment: 1000.00
+Net Total: 3000.00
+Tax Amount: 600.00
+Gross Total: 3600.00
+
+===== INVOICE 6 (DUPLICATE - Should be flagged as anomaly) =====
+Invoice Number: INV001
+Invoice Date: 2025-01-01
+Seller: CompanyA
+Buyer: CompanyB
+Currency: EUR
+Net Total: 80.00
+Tax Amount: 20.00
+Gross Total: 100.00
+Due Date: 2025-02-01
+
+===== INVOICE 7 (INVALID - Totals don't match) =====
+Invoice Number: INV007
+Invoice Date: 2025-01-25
+Seller: Bad Totals Co
+Buyer: Test Client
+Currency: EUR
+Net Total: 100.00
+Tax Amount: 10.00
+Gross Total: 150.00
+Due Date: 2025-02-25
+
+===== INVOICE 8 (INVALID - Missing seller_name and buyer_name) =====
+Invoice Number: INV008
+Invoice Date: 2025-02-01
+Currency: USD
+Net Total: 500.00
+Tax Amount: 100.00
+Gross Total: 600.00
+Due Date: 2025-03-01
+
+===== INVOICE 9 (INVALID - Invalid currency) =====
+Invoice Number: INV009
+Invoice Date: 2025-02-05
+Seller: Training Institute
+Buyer: HR Department
+Currency: JPY
+Net Total: 1200.00
+Tax Amount: 240.00
+Gross Total: 1440.00
+Due Date: 2025-03-05
+
+===== INVOICE 10 (INVALID - Due date before invoice date) =====
+Invoice Number: INV010
+Invoice Date: 2025-02-10
+Due Date: 2025-01-10
+Seller: Legal Services LLC
+Buyer: Compliance Officer
+Currency: USD
+Net Total: 2000.00
+Tax Amount: 400.00
+Gross Total: 2400.00
