@@ -117,19 +117,12 @@ invoice-qc-service/
 ├── static/
 │   └── index.html                  # Web console UI (290 lines, CSS + HTML + JS)
 │
-├── tests/
-│   └── test_basic.py               # Unit tests
-│
-├── sample_pdfs/                    # Sample invoice PDFs for testing
-├── sample_invoices.json            # Pre-extracted sample data
-│
 ├── Dockerfile                      # Docker image definition
 ├── docker-compose.yml              # Docker Compose orchestration
 ├── requirements.txt                # Python dependencies (pinned versions)
 ├── setup.py                        # Package setup & entry points
 ├── .env.example                    # Environment variable template
 ├── .gitignore                      # Git exclusions
-├── LICENSE                         # MIT license
 └── README.md                       # This file
 ```
 
@@ -576,10 +569,4 @@ This Invoice QC Service is a **complete, production-ready microservice** for inv
 ✅ **Minimal dependencies**: FastAPI + pdfplumber only; no heavy ML frameworks required  
 ✅ **Docker-ready**: Containerized with docker-compose for easy deployment  
 
-**For questions or contributions**, refer to the source code comments and test files. For production deployments, consider adding database persistence, async workers, and monitoring (Prometheus/Grafana).
 
----
-
-**License**: MIT (see LICENSE file)  
-**Author**: Pulkit Sharma  
-**Last Updated**: December 2024
