@@ -569,7 +569,9 @@ This Invoice QC Service is a **complete, production-ready microservice** for inv
 ✅ **Minimal dependencies**: FastAPI + pdfplumber only; no heavy ML frameworks required  
 ✅ **Docker-ready**: Containerized with docker-compose for easy deployment  
 
-Video 
+---
+
+## Video 
 - https://drive.google.com/file/d/1RZHWhcxm64LgujbOtYXqKkq64IYHk_qx/view?usp=sharing
 
 
