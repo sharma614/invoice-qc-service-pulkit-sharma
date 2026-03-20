@@ -1,0 +1,35 @@
+# Dependency directories
+node_modules/
+.venv/
+__pycache__/
+*.pyc
+env/
+.env
+
+# Build outputs
+dist/
+build/
+.next/
+out/
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Test/Temp
+test.json
+report.json
+*.tmp
+temp/

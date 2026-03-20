@@ -1,0 +1,112 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap');
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg-primary: #020617;
+  --bg-secondary: #0f172a;
+  --bg-card: rgba(15, 23, 42, 0.6);
+  --border: rgba(148, 163, 184, 0.1);
+  --border-hover: rgba(148, 163, 184, 0.2);
+  --accent: #38bdf8;
+  --accent-2: #818cf8;
+  --accent-glow: rgba(56, 189, 248, 0.15);
+  --success: #22c55e;
+  --success-bg: rgba(34, 197, 94, 0.1);
+  --danger: #ef4444;
+  --danger-bg: rgba(239, 68, 68, 0.1);
+  --warning: #f59e0b;
+  --text-primary: #f8fafc;
+  --text-secondary: #94a3b8;
+  --text-muted: #64748b;
+  --input-bg: #1e293b;
+}
+
+body {
+  font-family: 'Outfit', sans-serif;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  min-height: 100vh;
+  overflow-x: hidden;
+  background-image: 
+    radial-gradient(circle at top left, rgba(56, 189, 248, 0.05) 0%, transparent 40%),
+    radial-gradient(circle at bottom right, rgba(129, 140, 152, 0.05) 0%, transparent 40%);
+}
+
+.app-shell { display: flex; flex-direction: column; min-height: 100vh; }
+.navbar {
+  background: rgba(2, 6, 23, 0.8);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  position: sticky; top: 0; z-index: 50;
+  padding: 0 1.5rem;
+}
+.nav-content { max-width: 1200px; margin: 0 auto; height: 72px; display: flex; align-items: center; justify-content: space-between; }
+.logo { font-size: 1.5rem; font-weight: 800; display: flex; align-items: center; gap: 0.5rem; color: var(--text-primary); text-decoration: none; }
+.logo-icon { background: linear-gradient(135deg, var(--accent), var(--accent-2)); width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; }
+.logo span { background: linear-gradient(135deg, #fff, #94a3b8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+
+.nav-links { display: flex; gap: 1rem; }
+.nav-link { color: var(--text-secondary); text-decoration: none; font-weight: 500; font-size: 0.95rem; padding: 0.5rem 1rem; border-radius: 8px; transition: all 0.2s; }
+.nav-link:hover { color: var(--text-primary); background: var(--bg-secondary); }
+.nav-link.active { color: var(--accent); background: rgba(56, 189, 248, 0.1); }
+
+.main-content { flex: 1; max-width: 1200px; margin: 0 auto; padding: 2rem 1.5rem; width: 100%; }
+
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 2rem;
+  backdrop-filter: blur(10px);
+  transition: all 0.3s;
+}
+.card:hover { border-color: var(--border-hover); background: rgba(15, 23, 42, 0.7); }
+
+.btn {
+  padding: 0.75rem 1.5rem; border-radius: 12px; font-weight: 600; font-size: 0.95rem;
+  cursor: pointer; transition: all 0.2s; display: inline-flex; align-items: center; gap: 0.5rem; border: none;
+}
+.btn-primary { 
+  background: linear-gradient(135deg, var(--accent), var(--accent-2)); 
+  color: white; 
+  box-shadow: 0 4px 15px rgba(56, 189, 248, 0.25);
+}
+.btn-primary:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(56, 189, 248, 0.35); }
+
+.upload-zone {
+  border: 2px dashed var(--border);
+  border-radius: 20px;
+  padding: 4rem 2rem;
+  text-align: center;
+  transition: all 0.2s;
+  cursor: pointer;
+  background: rgba(56, 189, 248, 0.02);
+}
+.upload-zone:hover { border-color: var(--accent); background: rgba(56, 189, 248, 0.05); }
+
+.status-badge {
+  padding: 0.25rem 0.75rem; border-radius: 999px; font-size: 0.8rem; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.05em;
+}
+.status-valid { background: var(--success-bg); color: var(--success); }
+.status-invalid { background: var(--danger-bg); color: var(--danger); }
+
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; }
+
+.json-editor {
+  width: 100%; min-height: 400px;
+  background: #0f172a; color: #38bdf8;
+  border: 1px solid var(--border); border-radius: 12px;
+  padding: 1.5rem; font-family: 'Fira Code', monospace;
+  font-size: 0.9rem; line-height: 1.6; outline: none;
+}
+
+.summary-stat {
+  display: flex; flex-direction: column; gap: 0.25rem;
+}
+.stat-value { font-size: 2rem; font-weight: 800; }
+.stat-label { font-size: 0.85rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase; }
+
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+.animate-fade { animation: fadeIn 0.4s ease-out forwards; }
