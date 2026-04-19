@@ -1,88 +1,74 @@
-from typing import List, Dict, Any, Tuple
+from typing import List, Dict, Any, Tuple, Optional, Set
 from datetime import datetime
 from collections import Counter, defaultdict
 
-TOLERANCE_TOTALS = 0.5
-TOLERANCE_LINEITEMS = 1.0
+from . import models, config
+from .utils import parsing
+
+settings = config.settings
 
 
-def _parse_iso_date(s: str):
-    if not s:
-        return None
-    try:
-        return datetime.fromisoformat(s).date()
-    except Exception:
-        for fmt in ("%d.%m.%Y", "%d/%m/%Y", "%d %B %Y", "%Y-%m-%d"):
-            try:
-                return datetime.strptime(s, fmt).date()
-            except Exception:
-                continue
-    return None
+# _parse_iso_date removed in favor of parsing.parse_date
 
 
-def validate_invoice(inv: Dict, seen_keys: set) -> Tuple[bool, List[str]]:
+def validate_invoice(inv: models.Invoice, seen_keys: Set[Tuple[Optional[str], Optional[str], Optional[str]]]) -> Tuple[bool, List[str]]:
     errors = []
 
-    if not inv.get("invoice_number"):
+    if not inv.invoice_number:
         errors.append("missing_field: invoice_number")
-    if not inv.get("invoice_date"):
+    if not inv.invoice_date:
         errors.append("missing_field: invoice_date")
-    if not inv.get("seller_name"):
+    if not inv.seller_name:
         errors.append("missing_field: seller_name")
-    if not inv.get("buyer_name"):
+    if not inv.buyer_name:
         errors.append("missing_field: buyer_name")
 
-    currency = inv.get("currency")
-    if currency and currency not in ("EUR", "USD", "GBP", "INR"):
+    currency = inv.currency
+    if currency and currency not in settings.SUPPORTED_CURRENCIES:
         errors.append("invalid_format: currency")
 
-    inv_date = _parse_iso_date(inv.get("invoice_date"))
-    due_date = _parse_iso_date(inv.get("due_date"))
-    if inv.get("invoice_date") and not inv_date:
+    inv_date_str = parsing.parse_date(inv.invoice_date)
+    due_date_str = parsing.parse_date(inv.due_date)
+    
+    if inv.invoice_date and not inv_date_str:
         errors.append("invalid_format: invoice_date")
-    if inv.get("due_date") and not due_date:
+    if inv.due_date and not due_date_str:
         errors.append("invalid_format: due_date")
 
+    inv_date = datetime.fromisoformat(inv_date_str).date() if inv_date_str else None
+    due_date = datetime.fromisoformat(due_date_str).date() if due_date_str else None
+
     for fld in ("net_total", "tax_amount", "gross_total"):
-        val = inv.get(fld)
+        val = getattr(inv, fld)
         if val is not None:
             try:
                 if float(val) < 0:
                     errors.append(f"invalid_value: {fld}_negative")
-            except Exception:
+            except (ValueError, TypeError):
                 errors.append(f"invalid_format: {fld}")
 
-    try:
-        net = float(inv.get("net_total")) if inv.get("net_total") is not None else None
-    except Exception:
-        net = None
-    try:
-        tax = float(inv.get("tax_amount")) if inv.get("tax_amount") is not None else None
-    except Exception:
-        tax = None
-    try:
-        gross = float(inv.get("gross_total")) if inv.get("gross_total") is not None else None
-    except Exception:
-        gross = None
+    net = inv.net_total
+    tax = inv.tax_amount
+    gross = inv.gross_total
 
     if net is not None and tax is not None and gross is not None:
-        if abs((net + tax) - gross) > TOLERANCE_TOTALS:
+        if abs((net + tax) - gross) > settings.TOLERANCE_TOTALS:
             errors.append("business_rule_failed: totals_mismatch")
 
-    items = inv.get("line_items") or []
+    items = inv.line_items
     if items and net is not None:
         try:
-            s = sum(float(i.get("line_total", 0)) for i in items)
-            if abs(s - net) > TOLERANCE_LINEITEMS:
+            s = sum(i.line_total for i in items)
+            if abs(s - net) > settings.TOLERANCE_LINEITEMS:
                 errors.append("business_rule_failed: lineitems_sum_mismatch")
-        except Exception:
+        except (ValueError, TypeError):
             errors.append("invalid_format: line_items")
 
     if inv_date and due_date:
         if due_date < inv_date:
             errors.append("business_rule_failed: due_before_invoice")
 
-    dup_key = (inv.get("invoice_number"), inv.get("seller_name"), inv.get("invoice_date"))
+    dup_key = (inv.invoice_number, inv.seller_name, inv.invoice_date)
     if dup_key in seen_keys:
         errors.append("anomaly: duplicate_invoice")
     else:
@@ -92,13 +78,13 @@ def validate_invoice(inv: Dict, seen_keys: set) -> Tuple[bool, List[str]]:
     return is_valid, errors
 
 
-def validate_all(invoices: List[Dict]) -> Dict[str, Any]:
+def validate_all(invoices: List[models.Invoice]) -> Dict[str, Any]:
     seen = set()
     results = []
     counter = Counter()
     valid_count = 0
     for inv in invoices:
-        inv_id = inv.get("invoice_number") or inv.get("external_reference") or "<unknown>"
+        inv_id = inv.invoice_number or inv.external_reference or "<unknown>"
         is_valid, errors = validate_invoice(inv, seen)
         if is_valid:
             valid_count += 1
@@ -121,6 +107,7 @@ if __name__ == "__main__":
         print("usage: validator.py <invoices.json>")
         sys.exit(1)
     with open(sys.argv[1], "r", encoding="utf-8") as fh:
-        invoices = json.load(fh)
+        raw_invoices = json.load(fh)
+    invoices = [models.Invoice(**i) for i in raw_invoices]
     out = validate_all(invoices)
     print(json.dumps(out["summary"], indent=2))

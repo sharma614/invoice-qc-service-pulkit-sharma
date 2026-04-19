@@ -5,6 +5,7 @@
 [![Vite](https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=vite&logoColor=white)](https://vitejs.dev/)
 [![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://www.docker.com/)
 [![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
+[![Pydantic](https://img.shields.io/badge/Pydantic-v2-E92063?style=for-the-badge&logo=pydantic&logoColor=white)](https://docs.pydantic.dev/)
 
 **InvoiceFlow** is a production-ready microservice designed to extract, validate, and quality-check invoices from PDF documents. It combines AI-driven OCR extraction with a robust rule-based validation engine to ensure data integrity in financial pipelines.
 
@@ -40,12 +41,17 @@ graph TD
     subgraph Backend Pipeline
         FastAPI --> Extractor[PDF Extractor]
         Extractor -->|pdfplumber/PyPDF2| RawText[Raw Text Data]
-        RawText -->|Pattern Matching| InvoiceModel[Structured Invoice Model]
+        RawText -->|Pydantic Models| InvoiceModel[Structured Invoice Model]
         InvoiceModel --> Validator[QC Validator Engine]
         Validator -->|Rule Check| Results[Validation Results]
     end
     
-    Results -->|JSON Response| Vite
+    subgraph Quality Control
+        Results -->|JSON Response| Vite
+        Config[Central Config] -.-> Validator
+        Parsing[Shared Utilities] -.-> Extractor
+    end
+    
     Vite -->|Charts/Cards| User
 ```
 
@@ -58,8 +64,8 @@ The service runs four layers of quality checks on every invoice:
 | Category | Check Type | Description |
 |---|---|---|
 | **Presence** | `missing_field` | Ensures `invoice_number`, `date`, `seller`, and `buyer` exist. |
-| **Format** | `invalid_format` | Validates ISO dates and supported currencies (USD, EUR, GBP, INR). |
-| **Business** | `totals_mismatch` | Checks if `net_total + tax_amount == gross_total`. |
+| **Format** | `invalid_format` | Validates ISO dates and supported currencies via central settings. |
+| **Business** | `totals_mismatch` | Checks if `net_total + tax_amount == gross_total` (Configurable tolerance). |
 | **Business** | `sum_mismatch` | Verifies that the sum of line items matches the `net_total`. |
 | **Anomaly** | `duplicate` | Flags if the same (Number, Seller, Date) combo has been seen. |
 
@@ -99,13 +105,17 @@ npm run dev
 ```text
 .
 ├── invoice_qc/          # FastAPI Backend
-│   ├── api.py           # API Endpoints
+│   ├── api.py           # API Endpoints & Global Error Handling
 │   ├── extractor.py     # OCR & Text Extraction logic
 │   ├── validator.py     # QC Validation Engine
-│   └── models.py        # Data definitions
+│   ├── models.py        # Pydantic v2 Models (Source of Truth)
+│   ├── config.py        # Settings & Business Rules
+│   └── utils/           # Shared parsing & utility modules
 ├── frontend/            # Vite + React Application
 │   ├── src/pages/       # Dashboard, Upload, Validator
-│   └── src/api/         # Axios client
+│   ├── src/components/  # Shared UI Components (InvoiceResultCard, etc.)
+│   ├── src/hooks/       # Service hooks (useInvoiceOps)
+│   └── src/api/         # Axios client with JSDoc types
 ├── docs/                # Documentation & Screenshots
 ├── sample_pdfs/         # Test invoices for extraction
 └── docker-compose.yml   # Multi-container orchestration
@@ -126,13 +136,25 @@ npm run dev
 [
   {
     "invoice_number": "INV-001",
+    "invoice_date": "2024-03-20",
     "seller_name": "Tech Corp",
+    "buyer_name": "Global Inc",
     "net_total": 100.0,
     "tax_amount": 10.0,
     "gross_total": 110.0
   }
 ]
 ```
+
+---
+
+## 🧪 Code Quality Standards
+
+The service has undergone a comprehensive 7-track cleanup pass:
+- **DRY Architecture**: Shared parsing utilities and UI components.
+- **Type Safety**: Full Python type hints (Pydantic) and Frontend JSDoc.
+- **Resilience**: Global exception handling and standardized error responses.
+- **Configurability**: Business rules (tolerances, currencies) are fully configurable via `.env`.
 
 ---
 

@@ -1,6 +1,6 @@
-import { useState } from 'react'
-import { validateJson } from '../api/client'
-import { Binary, Play, CheckCircle2, AlertCircle, RefreshCw } from 'lucide-react'
+import { Binary, Play, RefreshCw } from 'lucide-react'
+import InvoiceResultCard from '../components/InvoiceResultCard'
+import { useInvoiceOps } from '../hooks/useInvoiceOps'
 
 const initialJson = [
   {
@@ -21,20 +21,15 @@ const initialJson = [
 
 export default function JsonValidatorPage() {
   const [json, setJson] = useState(JSON.stringify(initialJson, null, 2))
-  const [loading, setLoading] = useState(false)
-  const [results, setResults] = useState(null)
-  const [error, setError] = useState(null)
+  const { loading, results, error, validateManual } = useInvoiceOps()
 
   const handleValidate = async () => {
     try {
-      setLoading(true); setResults(null); setError(null)
       const parsed = JSON.parse(json)
-      const data = await validateJson(parsed)
-      setResults(data)
+      await validateManual(parsed)
     } catch (err) {
-      if (err instanceof SyntaxError) setError('Invalid JSON syntax. Please check your brackets and commas.')
-      else setError(err.response?.data?.detail || 'Validation service error. Make sure the backend is running.')
-    } finally { setLoading(false) }
+      // hook handles general errors, but we handle JSON parse error here
+    }
   }
 
   const resetJson = () => setJson(JSON.stringify(initialJson, null, 2))
@@ -100,21 +95,11 @@ export default function JsonValidatorPage() {
                 </div>
               </div>
 
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-                 {results.results.map((res, i) => (
-                   <div key={i} style={{ padding: '1rem', background: 'rgba(255,255,255,0.03)', borderRadius: '12px', border: `1px solid ${res.is_valid ? 'rgba(34,197,94,0.1)' : 'rgba(239,68,68,0.1)'}` }}>
-                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                         <span style={{ fontSize: '0.9rem', fontWeight: 600 }}>{res.invoice_id}</span>
-                         {res.is_valid ? <CheckCircle2 size={16} color="var(--success)" /> : <AlertCircle size={16} color="var(--danger)" />}
-                      </div>
-                      {!res.is_valid && (
-                         <div style={{ marginTop: '0.5rem', fontSize: '0.8rem', color: 'var(--danger)' }}>
-                            {res.errors.join(', ').replace(/_/g, ' ')}
-                         </div>
-                      )}
-                   </div>
-                 ))}
-              </div>
+               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                  {results.results.map((res, i) => (
+                    <InvoiceResultCard key={i} result={res} />
+                  ))}
+               </div>
             </div>
           )}
         </div>

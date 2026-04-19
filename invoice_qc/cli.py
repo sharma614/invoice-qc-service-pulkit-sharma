@@ -2,7 +2,7 @@ import argparse
 import json
 import sys
 from pathlib import Path
-from . import extractor, validator
+from . import extractor, validator, models
 
 
 def cmd_extract(args):
@@ -10,13 +10,14 @@ def cmd_extract(args):
     outp = Path(args.output)
     outp.parent.mkdir(parents=True, exist_ok=True)
     with open(outp, "w", encoding="utf-8") as fh:
-        json.dump(invoices, fh, ensure_ascii=False, indent=2)
+        json.dump([i.model_dump() for i in invoices], fh, ensure_ascii=False, indent=2)
     print(f"Extracted {len(invoices)} invoices -> {outp}")
 
 
 def cmd_validate(args):
     with open(args.input, "r", encoding="utf-8") as fh:
-        invoices = json.load(fh)
+        raw_invoices = json.load(fh)
+    invoices = [models.Invoice(**i) for i in raw_invoices]
     res = validator.validate_all(invoices)
     with open(args.report, "w", encoding="utf-8") as fh:
         json.dump(res, fh, ensure_ascii=False, indent=2)

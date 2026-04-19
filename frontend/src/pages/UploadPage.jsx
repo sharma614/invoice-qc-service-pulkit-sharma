@@ -1,12 +1,11 @@
 import { useState, useRef } from 'react'
-import { extractAndValidatePdfs } from '../api/client'
-import { Upload, X, CheckCircle2, AlertCircle, FileText, ChevronRight, Info } from 'lucide-react'
+import { Upload, X, FileText, Info } from 'lucide-react'
+import InvoiceResultCard from '../components/InvoiceResultCard'
+import { useInvoiceOps } from '../hooks/useInvoiceOps'
 
 export default function UploadPage() {
   const [files, setFiles] = useState([])
-  const [loading, setLoading] = useState(false)
-  const [results, setResults] = useState(null)
-  const [error, setError] = useState(null)
+  const { loading, results, error, processPdfs } = useInvoiceOps()
   const fileInputRef = useRef()
 
   const handleFileChange = (e) => {
@@ -18,13 +17,11 @@ export default function UploadPage() {
 
   const handleUpload = async () => {
     if (files.length === 0) return
-    setLoading(true); setResults(null); setError(null)
     try {
-      const data = await extractAndValidatePdfs(files)
-      setResults(data)
+      await processPdfs(files)
     } catch (err) {
-      setError(err.response?.data?.detail || 'Extraction failed. Make sure the backend is running.')
-    } finally { setLoading(false) }
+      // Error handled by hook
+    }
   }
 
   return (
@@ -96,19 +93,7 @@ export default function UploadPage() {
               </div>
 
               {results.results.map((res, i) => (
-                <div key={i} className="card" style={{ padding: '1.25rem', borderLeft: `4px solid ${res.is_valid ? 'var(--success)' : 'var(--danger)'}` }}>
-                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
-                      <span style={{ fontWeight: 700, fontSize: '0.9rem' }}>Invoice #{res.invoice_id}</span>
-                      <span className={`status-badge ${res.is_valid ? 'status-valid' : 'status-invalid'}`}>
-                        {res.is_valid ? <CheckCircle2 size={12} /> : <AlertCircle size={12} />} {res.is_valid ? 'Pass' : 'Reject'}
-                      </span>
-                   </div>
-                   {!res.is_valid && (
-                     <div style={{ fontSize: '0.85rem', color: 'var(--danger)', display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
-                        {res.errors.map((err, j) => <div key={j} style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>• {err.replace(/_/g, ' ')}</div>)}
-                     </div>
-                   )}
-                </div>
+                <InvoiceResultCard key={i} result={res} />
               ))}
             </div>
           )}
